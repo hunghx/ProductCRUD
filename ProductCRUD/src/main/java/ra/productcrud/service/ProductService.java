@@ -3,10 +3,7 @@ package ra.productcrud.service;
 import ra.productcrud.model.Product;
 import ra.productcrud.util.ConnectDB;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,14 +42,23 @@ public class ProductService implements IGenericService<Product, Long> {
         try {
             if (product.getId() == null) {
                 // thêm moi
-                CallableStatement callSt = conn.prepareCall("{call insertProduct(?,?,?,?,?,?)}");
+                CallableStatement callSt = conn.prepareCall("{call insertProduct(?,?,?,?,?,?,?)}");
                 callSt.setString(1, product.getName());
                 callSt.setString(2, product.getDescriptions());
                 callSt.setDouble(3, product.getPrice());
                 callSt.setInt(4, product.getStock());
                 callSt.setString(5, product.getImageUrl());
                 callSt.setBoolean(6, product.isStatus());
-                callSt.executeUpdate();
+                callSt.registerOutParameter(7, Types.INTEGER);
+                callSt.execute();
+                Long newProId = callSt.getLong(7);
+                for (String url:product.getImageUrls()) {
+                    CallableStatement callSt1 = conn.prepareCall("{call insertImage(?,?)}");
+                    callSt1.setString(1,url);
+                    callSt1.setLong(2,newProId);
+                    callSt1.executeUpdate();
+                }
+
             } else {
                 // cap nhat
                 CallableStatement callSt = conn.prepareCall("{call updateProduct(?,?,?,?,?,?,?)}");
@@ -105,6 +111,16 @@ public class ProductService implements IGenericService<Product, Long> {
                 p.setImageUrl(rs.getString("image_url"));
                 p.setStatus(rs.getBoolean("status"));
             }
+
+            // lấy về list image
+            callSt = conn.prepareCall("{call findImageByProductId(?)}");
+            callSt.setLong(1,id);
+            ResultSet rs2 = callSt.executeQuery();
+            while (rs2.next()){
+                String url = rs2.getString("url");
+                p.getImageUrls().add(url);
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

@@ -24,7 +24,7 @@
         <th>Price</th>
         <th>Stock</th>
         <th>Status</th>
-        <th colspan="2">Action</th>
+        <th colspan="3">Action</th>
     </tr>
     </thead>
     <tbody>
@@ -32,12 +32,13 @@
         <tr>
             <td>${item.count}</td>
             <td>${p.name}</td>
-            <td><img width="100px" height="100px" style="object-fit: cover" src="${p.imageUrl}" alt="anh"></td>
+            <td><img width="100px" height="100px" style="object-fit: cover" src="<%=request.getContextPath()%>/image/${p.imageUrl}" alt="anh"></td>
             <td>${p.price}</td>
             <td>${p.stock}</td>
             <td>${p.status?"Còn Hàng":"Hết Hàng"}</td>
-            <td><a href="<%=request.getContextPath()%>/CustomerServlet?action=EDIT&id=${c.id}">Edit</a></td>
-            <td><a onclick="return confirm('do you want to delete this item ? ')" href="<%=request.getContextPath()%>/CustomerServlet?action=DELETE&id=${c.id}">Delete</a></td>
+            <td><a href="<%=request.getContextPath()%>/Pro?action=EDIT&id=${p.id}">Edit</a></td>
+            <td><a href="<%=request.getContextPath()%>/ProductController?action=DETAIL&id=${p.id}">Detail</a></td>
+            <td><a onclick="return confirm('do you want to delete this item ? ')" href="<%=request.getContextPath()%>/CustomerServlet?action=DELETE&id=${p.id}">Delete</a></td>
         </tr>
     </c:forEach>
     </tbody>

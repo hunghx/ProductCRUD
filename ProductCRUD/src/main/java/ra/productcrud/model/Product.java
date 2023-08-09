@@ -1,5 +1,8 @@
 package ra.productcrud.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
     private Long id;
     private  String name;
@@ -7,18 +10,20 @@ public class Product {
     private double price;
     private int stock;
     private String imageUrl;
+    private List<String> imageUrls= new ArrayList<>();
     private boolean status =true;
 
     public Product() {
     }
 
-    public Product(Long id, String name, String descriptions, double price, int stock, String imageUrl) {
+    public Product(Long id, String name, String descriptions, List<String> imageList, double price, int stock, String imageUrl) {
         this.id = id;
         this.name = name;
         this.descriptions = descriptions;
         this.price = price;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.imageUrls = imageList;
     }
 
     public Long getId() {
@@ -75,5 +80,13 @@ public class Product {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

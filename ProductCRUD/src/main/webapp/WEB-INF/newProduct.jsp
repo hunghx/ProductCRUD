@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>New Product</h1>
-<form action="<%=request.getContextPath()%>/ProductController" method="post">
+<form action="<%=request.getContextPath()%>/ProductController" method="post" enctype="multipart/form-data">
     <label for="name">Name</label>
     <input type="text" id="name" name="name" >
     <label for="des">Description</label>
@@ -23,8 +23,11 @@
     <label for="stock">Stock</label>
     <input type="number" id="stock" name="stock" >
     <br>
-    <label >imageUrl</label>
-    <textarea name="imageUrl" cols="30" rows="10"></textarea>
+    <label for="image" >imageUrl</label>
+    <input type="file" name="image" id="image">
+    <label for="imageUrls" >imageUrls</label>
+    <input type="file" name="imageUrls" id="imageUrls" multiple>
+
     <input type="submit" value="ADD" name="action"/>
 </form>
 </body>
