@@ -12,6 +12,7 @@
     <jsp:include page="../layout/head.jsp"></jsp:include>
 </head>
 <body>
+<jsp:include page="../layout/navbar.jsp"></jsp:include>
 <h1>List Product</h1>
 
 <a href="<%=request.getContextPath()%>/ProductController?action=CREATE">Add</a>
