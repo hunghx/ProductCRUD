@@ -2,6 +2,7 @@ package ra.productcrud.controller;
 
 import ra.productcrud.model.Product;
 import ra.productcrud.service.ProductService;
+import ra.productcrud.util.Validate;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -43,6 +44,13 @@ public class ProductController extends HttpServlet {
                     Product p = productService.findById(id);
                     request.setAttribute("product",p);
                     request.getRequestDispatcher("/WEB-INF/productDetail.jsp").forward(request,response);
+                    break;
+                case "DELETE":
+                    // lấy ra id cần xóa
+                    Long idDel = Long.valueOf(request.getParameter("id"));
+                    productService.delete(idDel);
+                    response.sendRedirect("/");
+                    break;
             }
         }
     }
@@ -62,9 +70,21 @@ public class ProductController extends HttpServlet {
         if(action!=null){
             switch (action){
                 case "ADD":
+                    boolean flag = true;
                     String name = request.getParameter("name");
+                    if (!Validate.checkProductName(name)){
+                        flag= false;
+                        request.setAttribute("errorName","Độ dài tối thiểu 6 kí tự");
+                    }else if(productService.checkExistProductName(name)){
+                        flag= false;
+                        request.setAttribute("errorName","Tên đã tồn tại");
+                    }
                     String des = request.getParameter("des");
-                    Double price = Double.valueOf(request.getParameter("price"));
+                    double price = Double.valueOf(request.getParameter("price"));
+                    if (price<=0){
+                        flag= false;
+                        request.setAttribute("errorPrice","Giá tiền phải lớn hơn 0");
+                    }
                     int stock = Integer.parseInt(request.getParameter("stock"));
                     Collection<Part> listImageUrl = request.getParts();
                     String avatar = "";
@@ -83,9 +103,12 @@ public class ProductController extends HttpServlet {
                            listImageUrls.add(part.getSubmittedFileName());
                         }
                     }
-
+                    if(!flag){
+                        request.getRequestDispatcher("/WEB-INF/newProduct.jsp").forward(request,response);
+                    }else {
                     Product newProduct= new Product(null,name,des,listImageUrls,price,stock,avatar);
                     productService.save(newProduct);
+                    }
                     break;
             }
             response.sendRedirect("/");

@@ -1,5 +1,7 @@
 package ra.productcrud.service;
 
+
+
 import ra.productcrud.model.Product;
 import ra.productcrud.util.ConnectDB;
 
@@ -83,6 +85,7 @@ public class ProductService implements IGenericService<Product, Long> {
     public void delete(Long id) {
         Connection conn = ConnectDB.getConnection();
         try {
+            // xóa ảnh phụ
             CallableStatement callSt = conn.prepareCall("{call deleteProduct(?)}");
             callSt.setLong(1,id);
             callSt.executeUpdate();
@@ -127,5 +130,13 @@ public class ProductService implements IGenericService<Product, Long> {
             ConnectDB.closeConnection(conn);
         }
         return p;
+    }
+    public boolean checkExistProductName(String name){
+        for (Product p: findAll()) {
+            if(p.getName().equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+        return false;
     }
 }

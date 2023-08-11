@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <jsp:include page="../layout/head.jsp"></jsp:include>
 </head>
 <body>
 <h1>List Product</h1>
@@ -24,7 +24,7 @@
         <th>Price</th>
         <th>Stock</th>
         <th>Status</th>
-        <th colspan="3">Action</th>
+        <th colspan="4">Action</th>
     </tr>
     </thead>
     <tbody>
@@ -36,12 +36,14 @@
             <td>${p.price}</td>
             <td>${p.stock}</td>
             <td>${p.status?"Còn Hàng":"Hết Hàng"}</td>
-            <td><a href="<%=request.getContextPath()%>/Pro?action=EDIT&id=${p.id}">Edit</a></td>
+            <td><a href="<%=request.getContextPath()%>/ProductController?action=EDIT&id=${p.id}">Edit</a></td>
+            <td><a href="<%=request.getContextPath()%>/CartServlet?action=ADDTOCART&id=${p.id}">Buy</a></td>
             <td><a href="<%=request.getContextPath()%>/ProductController?action=DETAIL&id=${p.id}">Detail</a></td>
-            <td><a onclick="return confirm('do you want to delete this item ? ')" href="<%=request.getContextPath()%>/CustomerServlet?action=DELETE&id=${p.id}">Delete</a></td>
+            <td><a onclick="return confirm('do you want to delete this item ? ')" href="<%=request.getContextPath()%>/ProductController?action=DELETE&id=${p.id}">Delete</a></td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+<jsp:include page="../layout/footer.jsp"></jsp:include>
 </body>
 </html>
